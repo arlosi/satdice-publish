@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SatDice Simulator</title>
+    
+<script type="module">
+import init, * as bindings from '/satdice-publish/v1/simulator-3db773283981ec30.js';
+const wasm = await init({ module_or_path: '/satdice-publish/v1/simulator-3db773283981ec30_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+    
+    <style>
+      body {
+        margin: 0;
+        box-sizing: border-box;
+        height: 100vh;
+        padding: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        background: #1b1b1b;
+        color: #cfcfcf;
+        font-family: system-ui, sans-serif;
+      }
+
+      /* The image sets the coordinate system: everything below is placed as a
+         percentage of it, measured off `assets/satdice.png` (567x1652). */
+      #phone {
+        position: relative;
+        height: 100%;
+        aspect-ratio: 567 / 1652;
+        flex: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+      #phone img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* The 128x64 display, centred in the bezel's 63.14% x 11.93% cutout. */
+      #display {
+        position: absolute;
+        left: 18.342%;
+        top: 36.017%;
+        width: 63.139%;
+        height: 10.835%;
+        background: #000;
+        isolation: isolate;
+      }
+      #display canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+      /* The panel is a two-tone OLED: the top 16 of its 64 rows are yellow and
+         the rest are blue. Multiplying tints the lit pixels and leaves the
+         unlit ones black. */
+      #display::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(#fbff00 0 25%, #00aeff 25% 100%);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+      }
+
+      .key {
+        position: absolute;
+        padding: 0;
+        border: none;
+        border-radius: 18%/20%;
+        background: transparent;
+        cursor: pointer;
+        touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Stands in for the LED behind each key on the real device. */
+      .key.pressed {
+        background: rgba(255, 246, 214, 0.38);
+        box-shadow: 0 0 0.6rem rgba(255, 246, 214, 0.45);
+      }
+      .key:focus-visible {
+        outline: 2px solid #7aa7ff;
+        outline-offset: 2px;
+      }
+
+      .key.c0 { left: 15.2%; }
+      .key.c1 { left: 40.5%; }
+      .key.c2 { left: 66.8%; }
+      .key    { width: 19.0%; }
+
+      .key.r0 { top: 62.8%; height: 5%; }
+      .key.r1 { top: 69.8%; height: 5%; }
+      .key.r2 { top: 77.0%; height: 5%; }
+      .key.r3 { top: 84.5%; height: 5%; }
+      
+      .key.r0.c1 { top: 63.2%; height: 5%; }
+      .key.r1.c1 { top: 70.5%; height: 5%; }
+      .key.r2.c1 { top: 78%; height: 5%; }
+      .key.r3.c1 { top: 85%; height: 5%; }
+
+      kbd {
+        background: #333;
+        border-radius: 3px;
+        padding: 0 0.3em;
+      }
+    </style>
+  <link rel="modulepreload" href="/satdice-publish/v1/simulator-3db773283981ec30.js" crossorigin="anonymous" integrity="sha384-AdpcCcKQXTkRSrxGZTu4c66zlk/WOQWEQDnJy0tBOvobXD7MoU6yDPaxvYFiiybt"><link rel="preload" href="/satdice-publish/v1/simulator-3db773283981ec30_bg.wasm" crossorigin="anonymous" integrity="sha384-/XHf8VoDdnch3XvFZu1TrI1mFRzHW526u+cKHmPr105mXIq7bh9HFeg/YEb1d00R" as="fetch" type="application/wasm"></head>
+  <body>
+    <div id="phone">
+      <img src="satdice.png" alt="SatDice handset" />
+      <div id="display"></div>
+
+      <button class="key c0 r0" data-key="1" aria-label="1"></button>
+      <button class="key c1 r0" data-key="2" aria-label="2"></button>
+      <button class="key c2 r0" data-key="3" aria-label="3"></button>
+      <button class="key c0 r1" data-key="4" aria-label="4"></button>
+      <button class="key c1 r1" data-key="5" aria-label="5"></button>
+      <button class="key c2 r1" data-key="6" aria-label="6"></button>
+      <button class="key c0 r2" data-key="7" aria-label="7"></button>
+      <button class="key c1 r2" data-key="8" aria-label="8"></button>
+      <button class="key c2 r2" data-key="9" aria-label="9"></button>
+      <button class="key c0 r3" data-key="10" aria-label="Separate"></button>
+      <button class="key c1 r3" data-key="0" aria-label="0"></button>
+      <button class="key c2 r3" data-key="11" aria-label="Roll"></button>
+    </div>
+  </body>
+</html>
