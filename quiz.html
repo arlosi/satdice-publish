@@ -586,18 +586,14 @@
   }
 
   function choose(idx){
-    var first = answers[qi] === null;
     answers[qi] = idx;
-    // reflect selection immediately, then move along
+    // record the selection and unlock Next — advancing is always a deliberate click
     var buttons = app.querySelectorAll(".opt");
     for(var i=0;i<buttons.length;i++){
       buttons[i].setAttribute("aria-checked", i === idx ? "true" : "false");
     }
     var next = app.querySelector(".nav .btn:not(.ghost)");
     if(next) next.disabled = false;
-    if(first){
-      window.setTimeout(advance, 260);
-    }
   }
 
   function advance(){
