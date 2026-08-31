@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Black Flare Player Character Are You?</title>
+<style>
+  :root{
+    --green:#39ff14;
+    --green-dim:#1da60c;
+    --green-faint:rgba(57,255,20,.28);
+    --green-ghost:rgba(57,255,20,.07);
+    --bg:#000;
+    --panel:#050a05;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,"Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--green);
+    font-family:var(--mono);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ambient glow + scanlines */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:2;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,.35) 3px,
+      rgba(0,0,0,.35) 4px);
+    opacity:.5;
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:radial-gradient(ellipse at 50% 40%, rgba(57,255,20,.07), rgba(0,0,0,0) 60%),
+               radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.85) 100%);
+  }
+  .wrap{
+    position:relative;z-index:3;
+    min-height:100%;
+    display:flex;flex-direction:column;
+    max-width:760px;margin:0 auto;padding:28px 22px 64px;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:14px;
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--green-dim);
+    border-bottom:1px solid var(--green-ghost);
+    padding-bottom:10px;margin-bottom:6px;
+    min-height:34px;
+  }
+  .topbar .tag{white-space:nowrap}
+  .bar{
+    flex:1;height:6px;border:1px solid rgba(57,255,20,.3);
+    background:rgba(57,255,20,.05);position:relative;overflow:hidden;
+  }
+  .bar span{
+    position:absolute;inset:0 auto 0 0;width:0%;
+    background:var(--green);box-shadow:0 0 10px var(--green);
+    transition:width .35s ease;
+  }
+  .topbar.hidden{visibility:hidden}
+
+  /* ---------- page ---------- */
+  main{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .page{animation:fade .32s ease both;padding:18px 0}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  h1{
+    font-size:clamp(26px,6.2vw,46px);
+    line-height:1.12;margin:0 0 26px;
+    letter-spacing:.02em;
+    text-shadow:0 0 14px rgba(57,255,20,.55),0 0 42px rgba(57,255,20,.22);
+  }
+  h1 .sub{display:block;font-size:.42em;letter-spacing:.42em;color:var(--green-dim);
+    text-shadow:none;margin-bottom:16px}
+  h2{font-size:clamp(20px,3.6vw,27px);line-height:1.35;margin:0 0 30px;font-weight:600;
+     text-shadow:0 0 12px rgba(57,255,20,.35)}
+  p{margin:0 0 18px}
+  .lede{font-size:18px;color:#bfffb2}
+  .dim{color:var(--green-dim)}
+  .caret::after{content:"_";animation:blink 1.05s step-end infinite;margin-left:2px}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+  .qnum{
+    font-size:12px;letter-spacing:.3em;color:var(--green-dim);
+    text-transform:uppercase;margin-bottom:14px;
+  }
+
+  /* ---------- options ---------- */
+  .opts{display:flex;flex-direction:column;gap:11px;margin:0 0 8px;padding:0;list-style:none}
+  .opt{
+    display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;
+    font:inherit;color:var(--green);cursor:pointer;
+    background:var(--panel);border:1px solid rgba(57,255,20,.32);
+    padding:14px 16px;transition:background .15s,border-color .15s,box-shadow .15s,transform .08s;
+  }
+  .opt:hover,.opt:focus-visible{
+    background:rgba(57,255,20,.09);border-color:var(--green);
+    box-shadow:0 0 0 1px rgba(57,255,20,.25),0 0 18px rgba(57,255,20,.18);
+    outline:none;
+  }
+  .opt:active{transform:translateY(1px)}
+  .opt .key{
+    flex:none;width:26px;height:26px;display:grid;place-items:center;
+    border:1px solid rgba(57,255,20,.45);font-size:12px;color:var(--green-dim);
+  }
+  .opt[aria-checked="true"]{
+    background:rgba(57,255,20,.14);border-color:var(--green);
+    box-shadow:0 0 22px rgba(57,255,20,.28) inset,0 0 14px rgba(57,255,20,.2);
+  }
+  .opt[aria-checked="true"] .key{background:var(--green);color:#000;border-color:var(--green)}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:12px;
+    font:inherit;letter-spacing:.12em;text-transform:uppercase;font-size:14px;
+    color:#000;background:var(--green);border:1px solid var(--green);
+    padding:13px 26px;cursor:pointer;
+    box-shadow:0 0 18px rgba(57,255,20,.4);
+    transition:transform .08s,box-shadow .15s,background .15s;
+  }
+  .btn:hover{box-shadow:0 0 30px rgba(57,255,20,.7)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{
+    background:transparent;color:var(--green);box-shadow:none;
+    border-color:rgba(57,255,20,.4);
+  }
+  .btn.ghost:hover{border-color:var(--green);background:rgba(57,255,20,.08);box-shadow:0 0 16px rgba(57,255,20,.2)}
+  .nav{display:flex;align-items:center;gap:14px;margin-top:26px;flex-wrap:wrap}
+  .nav .spacer{flex:1}
+  .btn[disabled]{opacity:.3;cursor:not-allowed;box-shadow:none}
+
+  /* ---------- thinking ---------- */
+  .thinking-track{
+    height:2px;width:min(320px,100%);margin-top:34px;
+    background:rgba(57,255,20,.16);position:relative;overflow:hidden;
+  }
+  .thinking-track i{
+    position:absolute;inset:0 auto 0 0;width:0;
+    background:var(--green);box-shadow:0 0 12px var(--green);
+    transition:width linear;
+  }
+
+  /* ---------- quote ---------- */
+  blockquote{
+    margin:52px 0 0;padding:14px 0 14px 18px;
+    border-left:2px solid var(--green-dim);
+    color:var(--green-dim);font-style:italic;font-size:15px;
+  }
+  blockquote cite{display:block;font-style:normal;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;margin-top:10px;opacity:.85}
+
+  /* ---------- results ---------- */
+  .verdict{
+    font-size:clamp(28px,6vw,48px);line-height:1.15;margin:0 0 8px;
+    text-shadow:0 0 16px rgba(57,255,20,.6),0 0 50px rgba(57,255,20,.25);
+  }
+  .verdict .dots{color:var(--green-dim);text-shadow:none}
+  .result-body p{color:#c9ffbe;margin-bottom:20px}
+  .rule{height:1px;background:linear-gradient(to right,var(--green),rgba(57,255,20,0));margin:34px 0 26px}
+  .scores{margin:0 0 30px;padding:0;list-style:none}
+  .score{margin-bottom:14px}
+  .score .row{display:flex;justify-content:space-between;gap:12px;font-size:14px;margin-bottom:5px}
+  .score .row .pct{color:var(--green);font-variant-numeric:tabular-nums}
+  .score .track{height:9px;border:1px solid rgba(57,255,20,.28);background:rgba(57,255,20,.04);position:relative;overflow:hidden}
+  .score .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--green-dim);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .score.win .fill{background:var(--green);box-shadow:0 0 14px var(--green)}
+  .score.win .row{color:var(--green)}
+  .score:not(.win) .row{color:var(--green-dim)}
+  .section-label{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--green-dim);margin-bottom:16px}
+  .retake{
+    display:inline-block;margin-top:6px;color:var(--green);
+    border-bottom:1px dashed rgba(57,255,20,.5);text-decoration:none;cursor:pointer;
+  }
+  .retake:hover{border-bottom-style:solid;text-shadow:0 0 12px rgba(57,255,20,.7)}
+  footer{margin-top:44px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(57,255,20,.25)}
+
+  @media (max-width:520px){
+    .wrap{padding:20px 16px 48px}
+    .opt{padding:12px 13px;gap:11px}
+    .btn{width:100%;justify-content:center}
+    .nav .spacer{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar hidden" id="topbar">
+    <span class="tag" id="counter">Question 1 / 23</span>
+    <div class="bar"><span id="barfill"></span></div>
+  </div>
+  <main id="app"></main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CHARS = {
+    LH:{name:"Agent Laurel Hollis"},
+    AH:{name:"Ashton Hopkins"},
+    SS:{name:"Dr. Stephen Simpson"},
+    BH:{name:"Benjamin Harris"}
+  };
+  var ORDER = ["LH","AH","SS","BH"];
+
+  function o(text, chars){ return {t:text, p:chars}; }
+
+  var QUESTIONS = [
+    { q:"How do you think society should be run?", o:[
+      o("I believe firmly in democracy. Everyone should get an equal say.",["SS"]),
+      o("Some people don't know what's best for themselves and need a strong leader. If that makes me an authoritarian, then so be it.",["LH"]),
+      o("Honestly, I just go with the flow. Whatever most other people want is fine by me.",["AH"]),
+      o("Doesn't matter. I have undertaken great efforts to empower myself with complete and total independence should society fail.",["BH"])
+    ]},
+    { q:"You find a cache of weapons while on a mission. Which do you take?", o:[
+      o("The concealable pistol.",["LH","SS"]),
+      o("The shotgun.",["AH"]),
+      o("The sniper rifle.",["LH","AH"]),
+      o("The grenade.",["BH","SS"]),
+      o("I call the police!",["AH","SS"])
+    ]},
+    { q:"A beggar stops you on the street. What do you do?", o:[
+      o("Nod and keep walking.",["BH"]),
+      o("Dig around in your pockets for a dollar.",["SS"]),
+      o("Palm them a gift card.",["LH"]),
+      o("Listen awkwardly for thirty minutes while intermittently trying to make weak excuses to end the conversation, then don't give them any money.",["AH"])
+    ]},
+    { q:"Pick a season.", o:[
+      o("Spring",["AH"]), o("Summer",["SS"]), o("Fall",["BH"]), o("Winter",["LH"])
+    ]},
+    { q:"Someone is threatening your team with a knife! What do you do?", o:[
+      o("I can talk them down.",["LH"]),
+      o("My team is my family! Get mad and pull out a weapon of my own!",["AH"]),
+      o("Quickly search for a way to outwit them.",["BH"]),
+      o("I gotta get outta here.",["SS"])
+    ]},
+    { q:"How's your love life?", o:[
+      o("I'm in a committed relationship.",["AH"]),
+      o("It seems I'm not to most people's taste.",["SS"]),
+      o("Other pursuits interest me more than dating.",["BH"]),
+      o("Nobody seems to meet my standards.",["LH"])
+    ]},
+    { q:"Do you like the outdoors?", o:[
+      o("Only provided the climate is acceptable.",["SS"]),
+      o("I prefer to be outside.",["AH","BH"]),
+      o("It's a lot like indoors.",["LH"])
+    ]},
+    { q:"You open a treasure chest. Which do you take?", o:[
+      o("The bottle of unknown liquid.",["AH"]),
+      o("The gold coins.",["BH"]),
+      o("The ancient figurine.",["SS"]),
+      o("The skeleton.",["LH"])
+    ]},
+    { q:"Pick a pet.", o:[
+      o("Cat",["SS"]), o("Dog",["BH","LH"]), o("Houseplant",["AH"])
+    ]},
+    { q:"The restaurant gets your order wrong! What do you do?", o:[
+      o("Eat it anyways.",["BH","SS"]),
+      o("Inform the waitstaff of their mistake.",["AH","LH"])
+    ]},
+    { q:"Is money important to you?", o:[
+      o("You can't ever hoard too much. More money is more safety.",["BH"]),
+      o("I'd really rather not be scraping by.",["SS"]),
+      o("I don't spend much.",["LH","SS"]),
+      o("Wealth isn't everything.",["AH"])
+    ]},
+    { q:"Pick your partner Pokémon!", o:[
+      o("The Bulbasaur napping in the sunlight by the window.",["AH"]),
+      o("The mischievous Charmander pulling Squirtle's tail.",["BH"]),
+      o("The Squirtle who cries out and smacks Charmander back with water.",["SS"]),
+      o("The Pikachu focused on training in the corner.",["LH"])
+    ]},
+    { q:"How are you with technology?", o:[
+      o("I keep up to date on all the latest innovations — when it's not my own work advancing the field.",["BH"]),
+      o("I use my computer most every day.",["AH","LH"]),
+      o("The stuff seems to break around me.",["SS"])
+    ]},
+    { q:"You think someone is complimenting you way too much.", o:[
+      o("They clearly want something from me.",["LH","SS","BH"]),
+      o("You try to compliment them back, but can't come up with as many and feel bad.",["AH"]),
+      o("That's very strange. Nobody compliments me.",["SS"]),
+      o("It's all true. I preen.",["LH","BH"])
+    ]},
+    { q:"How do you take notes?", o:[
+      o("In pen.",["LH"]), o("In pencil.",["AH"]), o("On my phone.",["BH"]), o("I'll remember it.",["SS"])
+    ]},
+    { q:"Did you like math class in school?", o:[
+      o("In fact, it was my favorite subject.",["BH"]),
+      o("It was fine.",["AH","LH"]),
+      o("Math is my weakest subject.",["SS"])
+    ]},
+    { q:"If you were a slice of pie, what kind of pie would you be?", o:[
+      o("Apple pie.",["LH"]), o("Blueberry pie.",["BH"]), o("Pecan pie.",["SS"]), o("Quiche.",["AH"])
+    ]},
+    { q:"Are you extroverted?", o:[
+      o("I prefer the company of others to being alone.",["LH"]),
+      o("People wear me out.",["AH","SS"]),
+      o("I like spending time with my dog best of all.",["BH"])
+    ]},
+    { q:"Can you easily convince people to do what you say?", o:[
+      o("No. Worse, sometimes it seems like others actively go against whatever I propose.",["SS"]),
+      o("I guess, but I don't like to tell others what to do.",["AH"]),
+      o("It takes a lot of effort to convince someone and it usually doesn't work.",["BH"]),
+      o("I don't call it manipulation, I call it people skills.",["LH"])
+    ]},
+    { q:"It's been a stressful day. How do you unwind?", o:[
+      o("Exercise. Cooking. Whatever gets my mind off it.",["LH"]),
+      o("I find nature to be quite healing.",["BH","AH"]),
+      o("I spend time with my family.",["AH","LH"]),
+      o("I ruminate until I feel worse.",["SS"])
+    ]},
+    { q:"Do you like pranks and teasing?", o:[
+      o("That sorta stuff is usually kinda annoying.",["AH","SS"]),
+      o("Sure. I'm a playful type.",["BH","LH"]),
+      o("Teasing moreso than pranks.",["LH"])
+    ]},
+    { q:"Who's your favorite teammate?", o:[
+      o("Ashton Hopkins",["AH","LH","SS","BH"]),
+      o("Benjamin Harris",["BH","AH","SS"]),
+      o("Agent Laurel Hollis",["LH","AH","BH"]),
+      o("Dr. Stephen Simpson",["SS","AH","LH"])
+    ]},
+    { q:"The quiz is nearly over! Whatcha thinking?", o:[
+      o("I'll be happy with whoever I get.",["AH"]),
+      o("I'm curious to see my results.",["AH","SS"]),
+      o("I'm answering questions with a specific character in mind.",["BH"]),
+      o("I'm not sure why I'm taking this.",["LH"])
+    ]}
+  ];
+
+  var TIEBREAK_Q = 7; // index of the treasure chest question
+
+  var RESULTS = {
+    LH:[
+      "You're a natural leader! Actually, you have an almost neurotic need to feel in control, but you alone define what control means. You have a special kind of confidence that only comes with being true to yourself and yourself alone.",
+      "You're excellent at reading people. Your entire life is focused around figuring out why people do the horrible things they do. You work with the worst of the worst to find the best outcome for everyone involved. There is a morbid streak in you after a lifetime of bullshit.",
+      "You also care deeply for others and look after your team above all else. In fact, you have a bad habit of getting overly attached. Your closest friends and family are paramount excepting your own personal safety. You feel you know best for people and have even been accused of being overbearing, but overall you're open-minded to input.",
+      "You're exceptionally private. To be known is a special kind of vulnerability for you. Feelings are confusing and ignored until they become immediately pressing issues. Despite how well you read others, you actually don't know yourself that well, as you avoid introspection like the plague."
+    ],
+    AH:[
+      "You are a curious and kind soul. People seem to quite like you! You're quick to comfort others and a good listener. You don't pry, but they open up to you anyways. You're a bit of a pushover, but if someone you love is in jeopardy, you suddenly become the bravest person. In fact, you tend to go above and beyond what you maybe should for others.",
+      "Your environment has an outsized impact on you. Maybe this is why you're so loyal to the place you came from. Your hometown is an important facet of your identity.",
+      "You're an obsessive rule follower — rules, hierarchy, and order make the world make sense. You have a passion for the scientific process and finding answers that lead to more questions.",
+      "There is a profound and deep sense of sadness in you that you cannot seem to eradicate. Solving problems outside of yourself helps you feel as though you might one day resolve your own feelings, as though they are just another puzzle box you haven't yet cracked open."
+    ],
+    SS:[
+      "You're a principled one, aren't you? You're rather inflexible. You don't care whose feelings get hurt when it comes to what you believe to be right. You value truth above all else.",
+      "No, you don't soften your edges for the comfort of others. This can get in the way of relationships, but it's better to be honest than it is to be polite. Most people don't get along with you, but those who value authenticity find you to be a breath of fresh air.",
+      "You don't mind going off to do your own thing if you feel it's the right call. You're not exceptionally loyal to any one person or organization. Some might call you cowardly, but if you didn't have such a strong self-preservation instinct, you wouldn't be here with the living.",
+      "You really like your creature comforts. If you don't get a hot shower and full meal at the end of the day, it keeps you up at night. That being said, when the going gets tough, you're remarkably ironclad. You're never happy about it, but you do seem to bounce back from hardships much better than most.",
+      "That's good, because you have a sense of curiosity that gets you into trouble. In fact, most of your troubles come from digging where you ought not to go. Your passion for the truth also means you can't resist an unanswered question."
+    ],
+    BH:[
+      "You're always innovating and trying to figure out how things work — not because you especially care about solutions, but because you love novelty and challenge. You get a rush when you find an unorthodox way to solve a problem. You're a dog person and, like a border collie, you need constant mental stimulation in order to avoid getting bored. You have a playful streak. You will use humor to lighten the mood whenever you can.",
+      "The beauty of the natural world is a great source of both awe and comfort to you. The foundational building blocks of the universe, physics and math, are your lodestar. When things don't compute like they should, it feels like reality itself loses all meaning. You have an especially hard time processing Unnatural encounters that run contrary to your understanding of these tenets.",
+      "You go to great measures to feel secure. Sometimes it seems like nothing is “good enough” to feel safe. When it comes to loved ones, you can be a worrywart, but you still keep healthy boundaries and let people do their own thing. You love feeling helpful and have been part of multiple major efforts to assist various communities after disasters."
+    ]
+  };
+
+  // ---------------- state ----------------
+  var answers = new Array(QUESTIONS.length).fill(null);
+  var view = "cover";
+  var qi = 0;
+  var outcome = null;
+  var navToken = 0;
+
+  var app = document.getElementById("app");
+  var topbar = document.getElementById("topbar");
+  var counter = document.getElementById("counter");
+  var barfill = document.getElementById("barfill");
+
+  // ---------------- scoring ----------------
+  function isSingleQuestion(q){
+    for(var i=0;i<q.o.length;i++){ if(q.o[i].p.length !== 1) return false; }
+    return true;
+  }
+
+  function computeOutcome(){
+    var total = {LH:0,AH:0,SS:0,BH:0};
+    var single = {LH:0,AH:0,SS:0,BH:0};
+
+    QUESTIONS.forEach(function(q,i){
+      var a = answers[i];
+      if(a === null || a === undefined) return;
+      var solo = isSingleQuestion(q);
+      q.o[a].p.forEach(function(c){
+        total[c] += 1;
+        if(solo) single[c] += 1;
+      });
+    });
+
+    var top = -1;
+    ORDER.forEach(function(c){ if(total[c] > top) top = total[c]; });
+    var tied = ORDER.filter(function(c){ return total[c] === top; });
+
+    var tbUsed = 0;
+
+    if(tied.length > 1){
+      // Tiebreaker 1: points earned from questions with only single-character answers.
+      tbUsed = 1;
+      var bestSingle = -1;
+      tied.forEach(function(c){ if(single[c] > bestSingle) bestSingle = single[c]; });
+      var round2 = tied.filter(function(c){ return single[c] === bestSingle; });
+
+      if(round2.length > 1){
+        // Tiebreaker 2: the treasure chest question decides.
+        tbUsed = 2;
+        var chestAnswer = answers[TIEBREAK_Q];
+        var chestChars = (chestAnswer === null || chestAnswer === undefined)
+          ? [] : QUESTIONS[TIEBREAK_Q].o[chestAnswer].p;
+        var round3 = round2.filter(function(c){ return chestChars.indexOf(c) !== -1; });
+        tied = round3.length ? round3 : round2;
+      } else {
+        tied = round2;
+      }
+    }
+
+    var winner = tied[0];
+
+    // lead over the next-best character (0 when the top score was shared)
+    var runnerUp = -1;
+    ORDER.forEach(function(c){
+      if(c === winner) return;
+      if(total[c] > runnerUp) runnerUp = total[c];
+    });
+    var lead = total[winner] - runnerUp;
+
+    var sum = 0;
+    ORDER.forEach(function(c){ sum += total[c]; });
+
+    var ranked = ORDER.slice().sort(function(a,b){
+      if(total[b] !== total[a]) return total[b] - total[a];
+      if(a === winner) return -1;
+      if(b === winner) return 1;
+      return 0;
+    }).map(function(c){
+      return {
+        key:c,
+        name:CHARS[c].name,
+        points:total[c],
+        pct: sum ? Math.round(total[c] / sum * 1000) / 10 : 0
+      };
+    });
+
+    return {winner:winner, lead:lead, tbUsed:tbUsed, ranked:ranked, total:total};
+  }
+
+  // ---------------- rendering helpers ----------------
+  function el(tag, cls, text){
+    var n = document.createElement(tag);
+    if(cls) n.className = cls;
+    if(text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+
+  function button(label, cls, onClick){
+    var b = el("button", cls, label);
+    b.type = "button";
+    b.addEventListener("click", onClick);
+    return b;
+  }
+
+  // Back is always on the left, forward is always on the right.
+  function navBar(opts){
+    var nav = el("div","nav");
+    if(opts.back) nav.appendChild(button("← Back","btn ghost",opts.back));
+    nav.appendChild(el("span","spacer"));
+    var next = button(opts.nextLabel,"btn",opts.next);
+    if(opts.nextDisabled) next.disabled = true;
+    nav.appendChild(next);
+    return nav;
+  }
+
+  function page(){
+    var p = el("div","page");
+    return p;
+  }
+
+  function setChrome(){
+    if(view === "q"){
+      topbar.classList.remove("hidden");
+      counter.textContent = "Question " + (qi+1) + " / " + QUESTIONS.length;
+      barfill.style.width = ((qi) / QUESTIONS.length * 100) + "%";
+    } else if(view === "thinking" || view === "tb1" || view === "tb2" || view === "confidence" || view === "results"){
+      topbar.classList.remove("hidden");
+      counter.textContent = view === "results" ? "Complete" : "Tallying";
+      barfill.style.width = "100%";
+    } else {
+      topbar.classList.add("hidden");
+      barfill.style.width = "0%";
+    }
+  }
+
+  function go(v, index){
+    view = v;
+    if(typeof index === "number") qi = index;
+    render();
+    window.scrollTo(0,0);
+  }
+
+  // ---------------- pages ----------------
+  function renderCover(){
+    var p = page();
+    var h = el("h1");
+    var sub = el("span","sub","Black Flare");
+    h.appendChild(sub);
+    h.appendChild(document.createTextNode("Which player character are you?"));
+    p.appendChild(h);
+    p.appendChild(el("p","lede","Twenty-three questions. Four wonderful results."));
+    p.appendChild(navBar({nextLabel:"Take the quiz!", next:function(){ go("ready"); }}));
+    p.appendChild(el("footer",null,"A personality diagnostic"));
+    return p;
+  }
+
+  function renderReady(){
+    var p = page();
+    var h = el("h2","caret","Okey dokey, get comfortable. Are you ready?");
+    p.appendChild(h);
+    p.appendChild(navBar({
+      back:function(){ go("cover"); },
+      nextLabel:"I'm ready", next:function(){ go("instructions"); }
+    }));
+    return p;
+  }
+
+  function renderInstructions(){
+    var p = page();
+    p.appendChild(el("h2",null,"Select each answer closest to your truth."));
+    p.appendChild(navBar({
+      back:function(){ go("ready"); },
+      nextLabel:"Begin →", next:function(){ go("q",0); }
+    }));
+
+    var bq = el("blockquote");
+    bq.appendChild(document.createTextNode("“Just… answer the question.”"));
+    bq.appendChild(el("cite",null,"— Agent Laurel Hollis, Season One Episode One"));
+    p.appendChild(bq);
+    return p;
+  }
+
+  var LETTERS = "ABCDEFGH";
+
+  function renderQuestion(){
+    var q = QUESTIONS[qi];
+    var p = page();
+    p.appendChild(el("div","qnum","Question " + (qi+1)));
+    p.appendChild(el("h2",null,q.q));
+
+    var list = el("ul","opts");
+    q.o.forEach(function(opt, idx){
+      var li = el("li");
+      var b = el("button","opt");
+      b.type = "button";
+      b.setAttribute("role","radio");
+      b.setAttribute("aria-checked", answers[qi] === idx ? "true" : "false");
+      b.appendChild(el("span","key",LETTERS[idx]));
+      b.appendChild(el("span","txt",opt.t));
+      b.addEventListener("click", function(){ choose(idx); });
+      li.appendChild(b);
+      list.appendChild(li);
+    });
+    list.setAttribute("role","radiogroup");
+    list.setAttribute("aria-label", q.q);
+    p.appendChild(list);
+
+    p.appendChild(navBar({
+      back:function(){ if(qi === 0) go("instructions"); else go("q", qi-1); },
+      nextLabel: qi === QUESTIONS.length-1 ? "Finish →" : "Next →",
+      next:advance,
+      nextDisabled: answers[qi] === null
+    }));
+    return p;
+  }
+
+  function choose(idx){
+    var first = answers[qi] === null;
+    answers[qi] = idx;
+    // reflect selection immediately, then move along
+    var buttons = app.querySelectorAll(".opt");
+    for(var i=0;i<buttons.length;i++){
+      buttons[i].setAttribute("aria-checked", i === idx ? "true" : "false");
+    }
+    var next = app.querySelector(".nav .btn:not(.ghost)");
+    if(next) next.disabled = false;
+    if(first){
+      window.setTimeout(advance, 260);
+    }
+  }
+
+  function advance(){
+    if(answers[qi] === null) return;
+    if(qi < QUESTIONS.length - 1){
+      go("q", qi + 1);
+    } else {
+      outcome = computeOutcome();
+      go("thinking");
+    }
+  }
+
+  // Thinking pages have no button — they move along on their own.
+  function interstitial(text, delay, onNext){
+    var p = page();
+    p.appendChild(el("h2","caret",text));
+
+    var track = el("div","thinking-track");
+    var fill = el("i");
+    track.appendChild(fill);
+    p.appendChild(track);
+
+    var token = navToken;
+    window.setTimeout(function(){
+      fill.style.transitionDuration = delay + "ms";
+      fill.style.width = "100%";
+    }, 40);
+    window.setTimeout(function(){
+      if(token === navToken) onNext();
+    }, delay);
+    return p;
+  }
+
+  function afterThinking(){
+    if(outcome.tbUsed >= 1) go("tb1"); else go("confidence");
+  }
+
+  function renderConfidence(){
+    var p = page();
+    var lines;
+    if(outcome.tbUsed > 0){
+      lines = ["It's a tough choice. You're hard to figure out, you know that?",
+               "However, I believe you are…"];
+    } else if(outcome.lead >= 6){
+      lines = ["The answer is quite clear! Yes, you must be…"];
+    } else if(outcome.lead >= 3){
+      lines = ["With reasonable confidence, I can tell you are…"];
+    } else {
+      lines = ["It's pretty close, but you are…"];
+    }
+    lines.forEach(function(t,i){
+      var h = el("h2", i === lines.length-1 ? "caret" : null, t);
+      p.appendChild(h);
+    });
+    p.appendChild(navBar({nextLabel:"To results.", next:function(){ go("results"); }}));
+    return p;
+  }
+
+  function renderResults(){
+    var p = page();
+    var w = outcome.winner;
+
+    var v = el("h1","verdict");
+    v.appendChild(el("span","dots","… "));
+    v.appendChild(document.createTextNode(CHARS[w].name + "!"));
+    p.appendChild(v);
+
+    var body = el("div","result-body");
+    RESULTS[w].forEach(function(t){ body.appendChild(el("p",null,t)); });
+    p.appendChild(body);
+
+    p.appendChild(el("div","rule"));
+    p.appendChild(el("div","section-label","Your final tally"));
+
+    var ul = el("ul","scores");
+    outcome.ranked.forEach(function(r){
+      var li = el("li","score" + (r.key === w ? " win" : ""));
+      var row = el("div","row");
+      row.appendChild(el("span","name", r.name));
+      row.appendChild(el("span","pct", r.pct + "%"));
+      li.appendChild(row);
+      var track = el("div","track");
+      var fill = el("div","fill");
+      track.appendChild(fill);
+      li.appendChild(track);
+      ul.appendChild(li);
+      window.setTimeout(function(){
+        fill.style.width = (r.pct ? Math.max(r.pct, 1.5) : 0) + "%";
+      }, 60);
+    });
+    p.appendChild(ul);
+
+    var again = el("a","retake","Click here to retake the quiz!");
+    again.href = "#";
+    again.addEventListener("click", function(e){
+      e.preventDefault();
+      answers = new Array(QUESTIONS.length).fill(null);
+      outcome = null;
+      go("cover", 0);
+    });
+    p.appendChild(again);
+    p.appendChild(el("footer",null,"Black Flare • personality diagnostic"));
+    return p;
+  }
+
+  // ---------------- main render ----------------
+  function render(){
+    navToken++;
+    setChrome();
+    var node;
+    switch(view){
+      case "cover":        node = renderCover(); break;
+      case "ready":        node = renderReady(); break;
+      case "instructions": node = renderInstructions(); break;
+      case "q":            node = renderQuestion(); break;
+      case "thinking":     node = interstitial("Let me take a look at your responses here…", 2400, afterThinking); break;
+      case "tb1":          node = interstitial("Hm. Let me double check these answers…", 2200, function(){
+                              if(outcome.tbUsed >= 2) go("tb2"); else go("confidence");
+                            }); break;
+      case "tb2":          node = interstitial("I'm squinting very hard…", 2200, function(){ go("confidence"); }); break;
+      case "confidence":   node = renderConfidence(); break;
+      case "results":      node = renderResults(); break;
+    }
+    app.innerHTML = "";
+    app.appendChild(node);
+    if(view !== "cover" && view !== "q"){
+      var primary = app.querySelector(".nav .btn:not(.ghost)");
+      if(primary) primary.focus({preventScroll:true});
+    }
+  }
+
+  // keyboard: letter keys pick answers on question pages
+  document.addEventListener("keydown", function(e){
+    if(view !== "q" || e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = (e.key || "").toUpperCase();
+    var idx = k.length === 1 ? LETTERS.indexOf(k) : -1;
+    if(idx > -1 && idx < QUESTIONS[qi].o.length){
+      e.preventDefault();
+      choose(idx);
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
