@@ -6,8 +6,8 @@
     <title>SatDice Simulator</title>
     
 <script type="module">
-import init, * as bindings from '/satdice-publish/main/simulator-f2f91cd9f9799882.js';
-const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-f2f91cd9f9799882_bg.wasm' });
+import init, * as bindings from '/satdice-publish/main/simulator-a868d19ec67f43a9.js';
+const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-a868d19ec67f43a9_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -88,10 +88,12 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         touch-action: none;
         -webkit-tap-highlight-color: transparent;
       }
-      /* Stands in for the LED behind each key on the real device. */
+      /* Stands in for the LED behind each key on the real device.
+         `--led-brightness` runs from 0 to 1 and is set by the brightness
+         setting. */
       .key.pressed {
-        background: rgba(255, 246, 214, 0.38);
-        box-shadow: 0 0 0.6rem rgba(255, 246, 214, 0.45);
+        background: rgba(255, 246, 214, calc(0.7 * var(--led-brightness, 0.55)));
+        box-shadow: 0 0 0.6rem rgba(255, 246, 214, calc(0.8 * var(--led-brightness, 0.55)));
       }
       .key:focus-visible {
         outline: 2px solid #7aa7ff;
@@ -119,7 +121,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         padding: 0 0.3em;
       }
     </style>
-  <link rel="modulepreload" href="/satdice-publish/main/simulator-f2f91cd9f9799882.js" crossorigin="anonymous" integrity="sha384-1v2Qm0Ltrcdd1oDqR57SSa857C7v929/FHa1epbAR2jL7lQVKiaQ66Vt2N7jH4I5"><link rel="preload" href="/satdice-publish/main/simulator-f2f91cd9f9799882_bg.wasm" crossorigin="anonymous" integrity="sha384-XEqyMbnqdH8vZG9GHsgYbet7/R6cR+GMuxpqBeBf+Mlb3WIX+o3mCqGkhQHzRhF5" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/satdice-publish/main/simulator-a868d19ec67f43a9.js" crossorigin="anonymous" integrity="sha384-5KO3KMPZ3q+4tyuWO8DpvLS1sQdVnLJ4tn7+733QKiDDNIXZYvJAOHAAA5NP0PhF"><link rel="preload" href="/satdice-publish/main/simulator-a868d19ec67f43a9_bg.wasm" crossorigin="anonymous" integrity="sha384-7ZkYcZlVRLa2XGk7LOP6XsdLIbHLG551EOxErqVBAnZ5lSjct7Wrc7R92Grqwo6H" as="fetch" type="application/wasm"></head>
   <body>
     <div id="phone">
       <img src="satdice.png" alt="SatDice handset" />
