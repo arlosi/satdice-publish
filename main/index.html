@@ -6,8 +6,8 @@
     <title>SatDice Simulator</title>
     
 <script type="module">
-import init, * as bindings from '/satdice-publish/main/simulator-a4c3a4361f2090e7.js';
-const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-a4c3a4361f2090e7_bg.wasm' });
+import init, * as bindings from '/satdice-publish/main/simulator-caf499a932d8b83b.js';
+const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-caf499a932d8b83b_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -60,11 +60,14 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         background: #000;
         isolation: isolate;
       }
+      /* `--screen-brightness` runs from 0 to 1 and is set by the brightness
+         setting. Like the panel's contrast, even 0 stays readable. */
       #display canvas {
         display: block;
         width: 100%;
         height: 100%;
         image-rendering: pixelated;
+        filter: brightness(calc(0.5 + 0.5 * var(--screen-brightness, 0.5)));
       }
       /* The panel is a two-tone OLED: the top 16 of its 64 rows are yellow and
          the rest are blue. Multiplying tints the lit pixels and leaves the
@@ -123,7 +126,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         padding: 0 0.3em;
       }
     </style>
-  <link rel="modulepreload" href="/satdice-publish/main/simulator-a4c3a4361f2090e7.js" crossorigin="anonymous" integrity="sha384-0+2XoO9yaM0Na6IezorjCCLQ3jExbtMmU1vVtGoEwH6gmJCHqp91inRfaa0ikzEj"><link rel="preload" href="/satdice-publish/main/simulator-a4c3a4361f2090e7_bg.wasm" crossorigin="anonymous" integrity="sha384-Qs7nee8+622ITDieuEv+ZsktD5Vy6344ZoiJfVuXzEQEzDGHzXFCN61YDHREFqwo" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/satdice-publish/main/simulator-caf499a932d8b83b.js" crossorigin="anonymous" integrity="sha384-2ROfMzE03tbKD8lXhisB+vpMfzOjHu9hqiTNS4xMufycyuCeepxGsp4bdcFz2oCC"><link rel="preload" href="/satdice-publish/main/simulator-caf499a932d8b83b_bg.wasm" crossorigin="anonymous" integrity="sha384-K5+tb49rgVao3XjQOVz1Kta9eGS7Bk9r4qus1pRU0ZbcD2nJtj6yObXVlcu2mDKh" as="fetch" type="application/wasm"></head>
   <body>
     <div id="phone">
       <img src="satdice.png" alt="SatDice handset" />
