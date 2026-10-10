@@ -6,8 +6,8 @@
     <title>SatDice Simulator</title>
     
 <script type="module">
-import init, * as bindings from '/satdice-publish/main/simulator-36f34062623ac347.js';
-const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-36f34062623ac347_bg.wasm' });
+import init, * as bindings from '/satdice-publish/main/simulator-af55bbb1c13c1b77.js';
+const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-af55bbb1c13c1b77_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -90,8 +90,10 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
       }
       /* Stands in for the LED behind each key on the real device.
          `--led-brightness` runs from 0 to 1 and is set by the brightness
-         setting. */
-      .key.pressed {
+         setting. A key is `pressed` while held and `lit` when the app lights
+         it. */
+      .key.pressed,
+      .key.lit {
         background: rgba(255, 246, 214, calc(0.7 * var(--led-brightness, 0.55)));
         box-shadow: 0 0 0.6rem rgba(255, 246, 214, calc(0.8 * var(--led-brightness, 0.55)));
       }
@@ -121,7 +123,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         padding: 0 0.3em;
       }
     </style>
-  <link rel="modulepreload" href="/satdice-publish/main/simulator-36f34062623ac347.js" crossorigin="anonymous" integrity="sha384-5KO3KMPZ3q+4tyuWO8DpvLS1sQdVnLJ4tn7+733QKiDDNIXZYvJAOHAAA5NP0PhF"><link rel="preload" href="/satdice-publish/main/simulator-36f34062623ac347_bg.wasm" crossorigin="anonymous" integrity="sha384-VVS/61AKo8rKviJCNzmi6cgML7ahP5gde+TafBlT81/KFdpiR59TFW8yrIO2jPq2" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/satdice-publish/main/simulator-af55bbb1c13c1b77.js" crossorigin="anonymous" integrity="sha384-zOt9Q10Mj7xG/drxJgcY85srCX/7UPA+U5t7icErai3sTgx2gp7hsJeCFBf2UVeq"><link rel="preload" href="/satdice-publish/main/simulator-af55bbb1c13c1b77_bg.wasm" crossorigin="anonymous" integrity="sha384-+qiPyANuoWcLgX0+y+qfWvJ8lXmXDNr6u2ok6rVCkU+ejh+5UtkugaF+ysg6H/a7" as="fetch" type="application/wasm"></head>
   <body>
     <div id="phone">
       <img src="satdice.png" alt="SatDice handset" />
