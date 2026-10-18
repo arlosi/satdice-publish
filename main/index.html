@@ -6,8 +6,8 @@
     <title>SatDice Simulator</title>
     
 <script type="module">
-import init, * as bindings from '/satdice-publish/main/simulator-5887dde9ef8369e8.js';
-const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-5887dde9ef8369e8_bg.wasm' });
+import init, * as bindings from '/satdice-publish/main/simulator-d0ff15ec12ef8ccb.js';
+const wasm = await init({ module_or_path: '/satdice-publish/main/simulator-d0ff15ec12ef8ccb_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -126,7 +126,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         padding: 0 0.3em;
       }
     </style>
-  <link rel="modulepreload" href="/satdice-publish/main/simulator-5887dde9ef8369e8.js" crossorigin="anonymous" integrity="sha384-9RoDBPq7liXJ/ZwwRyiOubZTlQel2mQRdrfFRHAHHzSSiLwFrnscfMzcSVC7F6zu"><link rel="preload" href="/satdice-publish/main/simulator-5887dde9ef8369e8_bg.wasm" crossorigin="anonymous" integrity="sha384-STEvBqJQQQ29bILjrN+f4XN2GN/b70b0R+kT5xeV1Jv7tv4ETjSIWG8An3o14JHL" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/satdice-publish/main/simulator-d0ff15ec12ef8ccb.js" crossorigin="anonymous" integrity="sha384-AHJ1PlvVnzNxJLk1PnAX6KSzNQybxWYoijvPS1KPR/Rkkc3GEO41vCSiaDDOVT9i"><link rel="preload" href="/satdice-publish/main/simulator-d0ff15ec12ef8ccb_bg.wasm" crossorigin="anonymous" integrity="sha384-NtEFqyQZUhG6l0oyb8Prh6aTDuVbWAitSFke0gUzrogkA0gGLzm7LMD2o+M4Pw/6" as="fetch" type="application/wasm"></head>
   <body>
     <div id="phone">
       <img src="satdice.png" alt="SatDice handset" />
